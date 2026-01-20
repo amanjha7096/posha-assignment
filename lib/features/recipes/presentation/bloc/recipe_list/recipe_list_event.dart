@@ -10,17 +10,21 @@ class SearchRecipes extends RecipeListEvent {
   SearchRecipes(this.query);
 }
 
-class FilterByCategory extends RecipeListEvent {
-  final String? category;
+class SetPendingToSelected extends RecipeListEvent {}
 
-  FilterByCategory(this.category);
+class UpdatePendingCategories extends RecipeListEvent {
+  final List<String> categories;
+
+  UpdatePendingCategories(this.categories);
 }
 
-class FilterByArea extends RecipeListEvent {
-  final String? area;
+class UpdatePendingAreas extends RecipeListEvent {
+  final List<String> areas;
 
-  FilterByArea(this.area);
+  UpdatePendingAreas(this.areas);
 }
+
+class ApplyPendingFilters extends RecipeListEvent {}
 
 class ToggleViewMode extends RecipeListEvent {}
 

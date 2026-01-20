@@ -4,8 +4,8 @@ abstract class FavoritesEvent {}
 
 class LoadFavorites extends FavoritesEvent {}
 
-class ToggleFavoriteFromList extends FavoritesEvent {
+class ToggleFavorite extends FavoritesEvent {
   final String recipeId;
 
-  ToggleFavoriteFromList(this.recipeId);
+  ToggleFavorite(this.recipeId);
 }

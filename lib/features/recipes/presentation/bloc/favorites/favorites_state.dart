@@ -11,6 +11,9 @@ class FavoritesState {
     this.error,
   });
 
+  //check if recipe is marked as favorite
+  bool isFavorite(String id) => favoriteIds.contains(id);
+
   FavoritesState copyWith({
     bool? isLoading,
     List<String>? favoriteIds,

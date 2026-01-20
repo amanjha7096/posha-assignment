@@ -7,14 +7,16 @@ import '../../features/recipes/data/datasources/remote/recipe_remote_data_source
 import '../../features/recipes/data/datasources/local/recipe_local_data_source.dart';
 import '../../features/recipes/data/repositories/recipe_repository_impl.dart';
 import '../../features/recipes/domain/repositories/recipe_repository.dart';
+import '../../features/recipes/domain/usecases/check_favorite_status.dart';
 import '../../features/recipes/domain/usecases/get_recipes.dart';
 import '../../features/recipes/domain/usecases/get_categories.dart';
 import '../../features/recipes/domain/usecases/get_areas.dart';
 import '../../features/recipes/domain/usecases/get_recipe_details.dart';
 import '../../features/recipes/domain/usecases/get_favorites.dart';
+import '../../features/recipes/domain/usecases/toggle_favorite_status.dart';
+import '../../features/recipes/presentation/bloc/favorites/favorites_bloc.dart';
 import '../../features/recipes/presentation/bloc/recipe_list/recipe_list_bloc.dart';
 import '../../features/recipes/presentation/bloc/recipe_detail/recipe_detail_bloc.dart';
-import '../../features/recipes/presentation/bloc/favorites/favorites_bloc.dart';
 
 import '../network/api_client.dart';
 import '../utils/hive_helper.dart';
@@ -56,6 +58,8 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton(() => GetAreas(sl()));
   sl.registerLazySingleton(() => GetRecipeDetails(sl()));
   sl.registerLazySingleton(() => GetFavorites(sl()));
+  sl.registerLazySingleton(() => CheckFavorite(sl()));
+  sl.registerLazySingleton(() => ToggleFavoriteStatus(sl()));
 
   // BLoCs
   sl.registerFactory(() => RecipeListBloc(sl(), sl(), sl()));

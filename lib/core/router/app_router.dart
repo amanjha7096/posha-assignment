@@ -34,10 +34,7 @@ class AppRouter {
           GoRoute(
             path: 'favorites',
             name: 'favorites',
-            builder: (context, state) => BlocProvider(
-              create: (context) => di.sl<FavoritesBloc>(),
-              child: const FavoritesPage(),
-            ),
+            builder: (context, state) => const FavoritesPage(),
           ),
         ],
       ),

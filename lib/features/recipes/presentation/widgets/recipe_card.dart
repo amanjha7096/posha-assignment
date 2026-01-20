@@ -1,175 +1,137 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/constants/colors.dart';
 import '../../domain/entities/recipe.dart';
+import '../bloc/favorites/favorites_bloc.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
-  final bool isListView;
-  final VoidCallback? onTap;
 
-  const RecipeCard({
-    super.key,
-    required this.recipe,
-    this.isListView = false,
-    this.onTap,
-  });
+  const RecipeCard({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {
-    if (isListView) {
-      return _buildListViewCard(context);
-    } else {
-      return _buildGridViewCard(context);
-    }
-  }
+    // Define the size of the overflowing image
+    const double imageRadius = 40;
+    const double imageDiameter = imageRadius * 2;
 
-  Widget _buildGridViewCard(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Hero(
-              tag: 'recipe_image_${recipe.id}',
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: CachedNetworkImage(
-                  imageUrl: recipe.imageUrl ?? '',
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    height: 120,
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: 120,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.image_not_supported),
-                  ),
+    return GestureDetector(
+      onTap: () => context.go('/recipe/${recipe.id}'),
+      child: Stack(
+        clipBehavior: .none,
+        alignment: .center,
+        children: [
+          // 1. The Main Card Container
+          Container(
+            margin: const EdgeInsets.only(top: imageRadius),
+            padding: const EdgeInsets.fromLTRB(16, 50, 16, 12),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(color: AppColors.black05, blurRadius: 15, offset: const Offset(0, 4), spreadRadius: 2),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: .min,
+              crossAxisAlignment: .center,
+              children: [
+                // Title
+                Text(
+                  recipe.name,
+                  textAlign: .center,
+                  maxLines: 2,
+                  overflow: .ellipsis,
+                  style: const TextStyle(fontSize: 14, fontWeight: .w700, color: AppColors.black87, height: 1),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    recipe.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  if (recipe.category != null)
-                    Text(
-                      recipe.category!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  if (recipe.area != null)
-                    Text(
-                      recipe.area!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildListViewCard(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Hero(
-                tag: 'recipe_image_${recipe.id}',
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                    imageUrl: recipe.imageUrl ?? '',
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      width: 80,
-                      height: 80,
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      width: 80,
-                      height: 80,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      recipe.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    if (recipe.category != null || recipe.area != null)
-                      Text(
-                        '${recipe.category ?? ''} ${recipe.area ?? ''}'.trim(),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
+                const SizedBox(height: 8),
+
+                // Area/Category info and Save Button
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: .spaceBetween,
+                    crossAxisAlignment: .end,
+                    children: [
+                      // Area/Category Info Column
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          children: [
+                            // Cuisine Label and Value
+                            Text(
+                              "Cuisine",
+                              style: TextStyle(fontSize: 10, color: AppColors.gray400, fontWeight: .w500),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              recipe.area ?? 'Unknown',
+                              style: const TextStyle(fontSize: 12, fontWeight: .w600, color: AppColors.black87),
+                            ),
+                            const SizedBox(height: 4),
+                            // Category Label and Value
+                            Text(
+                              "Category",
+                              style: TextStyle(fontSize: 10, color: AppColors.gray400, fontWeight: .w500),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              recipe.category ?? 'Unknown',
+                              style: const TextStyle(fontSize: 12, fontWeight: .w600, color: AppColors.black87),
+                            ),
+                          ],
                         ),
                       ),
-                    if (recipe.instructions != null)
-                      Text(
-                        recipe.instructions!,
-                        style: Theme.of(context).textTheme.bodySmall,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+
+                      // Save/Bookmark Button
+                      BlocBuilder<FavoritesBloc, FavoritesState>(
+                        builder: (context, state) {
+                          final isFavorite = state.favoriteIds.contains(recipe.id);
+                          return GestureDetector(
+                            onTap: () => context.read<FavoritesBloc>().add(ToggleFavorite(recipe.id)),
+                            child: Container(
+                              padding: const .all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                shape: .circle,
+                                boxShadow: [BoxShadow(color: AppColors.black05, blurRadius: 4, spreadRadius: 1)],
+                              ),
+                              child: Icon(
+                                isFavorite ? Icons.favorite : Icons.favorite_border,
+                                size: 20,
+                                color: isFavorite ? AppColors.red : AppColors.gray500,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 16),
-            ],
+              ],
+            ),
           ),
-        ),
+
+          // 2. The Floating Circular Image
+          Positioned(
+            top: 0,
+            child: Container(
+              width: imageDiameter,
+              height: imageDiameter,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.white,
+                boxShadow: [BoxShadow(color: AppColors.black15, blurRadius: 10, offset: const Offset(0, 5))],
+              ),
+              child: ClipOval(
+                child: recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty
+                    ? Image.network(recipe.imageUrl!, fit: BoxFit.cover)
+                    : const Icon(Icons.restaurant, color: AppColors.gray500, size: 30),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

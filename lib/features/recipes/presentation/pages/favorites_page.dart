@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../core/di/injection_container.dart' as di;
 import '../bloc/favorites/favorites_bloc.dart';
+import '../bloc/recipe_list/recipe_list_bloc.dart';
 import '../widgets/shimmer_loading.dart';
 import '../../domain/usecases/get_recipe_details.dart';
 
@@ -41,7 +43,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       body: BlocBuilder<FavoritesBloc, FavoritesState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const ShimmerLoading();
+            return ShimmerLoading(viewMode: ViewMode.list);
           }
 
           if (state.error != null) {
@@ -67,16 +69,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.favorite_border, size: 64, color: Colors.grey),
+                  Icon(Icons.favorite_border, size: 64, color: AppColors.gray500),
                   SizedBox(height: 16),
-                  Text(
-                    'No favorite recipes yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
+                  Text('No favorite recipes yet', style: TextStyle(fontSize: 18, color: AppColors.gray500)),
                   SizedBox(height: 8),
                   Text(
                     'Add recipes to favorites from the recipe details',
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(fontSize: 14, color: AppColors.gray500),
                   ),
                 ],
               ),
@@ -97,7 +96,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     context.go('/recipe/$recipeId');
                   },
                   onRemoveFavorite: () {
-                    context.read<FavoritesBloc>().add(ToggleFavoriteFromList(recipeId));
+                    context.read<FavoritesBloc>().add(ToggleFavorite(recipeId));
                   },
                 ),
               );
@@ -114,12 +113,7 @@ class FavoriteRecipeCard extends StatefulWidget {
   final VoidCallback onTap;
   final VoidCallback onRemoveFavorite;
 
-  const FavoriteRecipeCard({
-    super.key,
-    required this.recipeId,
-    required this.onTap,
-    required this.onRemoveFavorite,
-  });
+  const FavoriteRecipeCard({super.key, required this.recipeId, required this.onTap, required this.onRemoveFavorite});
 
   @override
   State<FavoriteRecipeCard> createState() => _FavoriteRecipeCardState();
@@ -156,17 +150,12 @@ class _FavoriteRecipeCardState extends State<FavoriteRecipeCard> {
   @override
   Widget build(BuildContext context) {
     if (recipeData == null) {
-      return const SizedBox(
-        height: 100,
-        child: ShimmerLoading(),
-      );
+      return const SizedBox(height: 100, child: ShimmerLoading(viewMode: ViewMode.list));
     }
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: widget.onTap,
         borderRadius: BorderRadius.circular(12),
@@ -178,22 +167,14 @@ class _FavoriteRecipeCardState extends State<FavoriteRecipeCard> {
               if (recipeData!['imageUrl'] != null)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    recipeData!['imageUrl'],
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.network(recipeData!['imageUrl'], width: 80, height: 80, fit: BoxFit.cover),
                 )
               else
                 Container(
                   width: 80,
                   height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.restaurant, size: 40, color: Colors.grey),
+                  decoration: BoxDecoration(color: AppColors.gray300, borderRadius: BorderRadius.circular(8)),
+                  child: const Icon(Icons.restaurant, size: 40, color: AppColors.gray500),
                 ),
 
               const SizedBox(width: 16),
@@ -205,9 +186,7 @@ class _FavoriteRecipeCardState extends State<FavoriteRecipeCard> {
                   children: [
                     Text(
                       recipeData!['name'],
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -218,18 +197,14 @@ class _FavoriteRecipeCardState extends State<FavoriteRecipeCard> {
                           if (recipeData!['category'] != null) ...[
                             Text(
                               recipeData!['category'],
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.gray600),
                             ),
                             if (recipeData!['area'] != null) const Text(' • '),
                           ],
                           if (recipeData!['area'] != null)
                             Text(
                               recipeData!['area'],
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.gray600),
                             ),
                         ],
                       ),
@@ -239,7 +214,7 @@ class _FavoriteRecipeCardState extends State<FavoriteRecipeCard> {
 
               // Remove Favorite Button
               IconButton(
-                icon: const Icon(Icons.favorite, color: Colors.red),
+                icon: const Icon(Icons.favorite, color: AppColors.red),
                 onPressed: widget.onRemoveFavorite,
               ),
             ],

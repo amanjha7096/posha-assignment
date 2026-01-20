@@ -8,8 +8,10 @@ class RecipeListState {
   final bool isLoading;
   final String? error;
   final ViewMode viewMode;
-  final String? selectedCategory;
-  final String? selectedArea;
+  final List<String> selectedCategories;
+  final List<String> selectedAreas;
+  final List<String> pendingSelectedCategories;
+  final List<String> pendingSelectedAreas;
   final String sortBy;
   final List<Category> categories;
   final List<String> areas;
@@ -20,8 +22,10 @@ class RecipeListState {
     this.isLoading = false,
     this.error,
     this.viewMode = ViewMode.grid,
-    this.selectedCategory,
-    this.selectedArea,
+    this.selectedCategories = const [],
+    this.selectedAreas = const [],
+    this.pendingSelectedCategories = const [],
+    this.pendingSelectedAreas = const [],
     this.sortBy = 'name',
     this.categories = const [],
     this.areas = const [],
@@ -33,8 +37,10 @@ class RecipeListState {
     bool? isLoading,
     String? error,
     ViewMode? viewMode,
-    String? selectedCategory,
-    String? selectedArea,
+    List<String>? selectedCategories,
+    List<String>? selectedAreas,
+    List<String>? pendingSelectedCategories,
+    List<String>? pendingSelectedAreas,
     String? sortBy,
     List<Category>? categories,
     List<String>? areas,
@@ -45,8 +51,10 @@ class RecipeListState {
       isLoading: isLoading ?? this.isLoading,
       error: error,
       viewMode: viewMode ?? this.viewMode,
-      selectedCategory: selectedCategory,
-      selectedArea: selectedArea,
+      selectedCategories: selectedCategories ?? this.selectedCategories,
+      selectedAreas: selectedAreas ?? this.selectedAreas,
+      pendingSelectedCategories: pendingSelectedCategories ?? this.pendingSelectedCategories,
+      pendingSelectedAreas: pendingSelectedAreas ?? this.pendingSelectedAreas,
       sortBy: sortBy ?? this.sortBy,
       categories: categories ?? this.categories,
       areas: areas ?? this.areas,
@@ -64,10 +72,5 @@ class RecipeListState {
     return recipes;
   }
 
-  int get activeFiltersCount {
-    int count = 0;
-    if (selectedCategory != null) count++;
-    if (selectedArea != null) count++;
-    return count;
-  }
+  int get activeFiltersCount => (selectedCategories.isNotEmpty ? 1 : 0) + (selectedAreas.isNotEmpty ? 1 : 0);
 }

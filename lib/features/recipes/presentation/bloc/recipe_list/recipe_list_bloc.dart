@@ -16,8 +16,10 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
   RecipeListBloc(this.getRecipes, this.getCategories, this.getAreas) : super(const RecipeListState()) {
     on<LoadRecipes>(_onLoadRecipes);
     on<SearchRecipes>(_onSearchRecipes);
-    on<FilterByCategory>(_onFilterByCategory);
-    on<FilterByArea>(_onFilterByArea);
+    on<SetPendingToSelected>(_onSetPendingToSelected);
+    on<UpdatePendingCategories>(_onUpdatePendingCategories);
+    on<UpdatePendingAreas>(_onUpdatePendingAreas);
+    on<ApplyPendingFilters>(_onApplyPendingFilters);
     on<ToggleViewMode>(_onToggleViewMode);
     on<SortRecipes>(_onSortRecipes);
     on<ClearFilters>(_onClearFilters);
@@ -54,7 +56,6 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
     try {
       final recipes = await getRecipes(query: event.query);
       emit(state.copyWith(
-        recipes: recipes,
         filteredRecipes: recipes,
         isLoading: false,
       ));
@@ -66,26 +67,30 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
     }
   }
 
-  void _onFilterByCategory(FilterByCategory event, Emitter<RecipeListState> emit) {
-    final filtered = _applyFilters(
-      recipes: state.recipes,
-      category: event.category,
-      area: state.selectedArea,
-    );
+  void _onSetPendingToSelected(SetPendingToSelected event, Emitter<RecipeListState> emit) {
     emit(state.copyWith(
-      selectedCategory: event.category,
-      filteredRecipes: filtered,
+      pendingSelectedCategories: state.selectedCategories,
+      pendingSelectedAreas: state.selectedAreas,
     ));
   }
 
-  void _onFilterByArea(FilterByArea event, Emitter<RecipeListState> emit) {
+  void _onUpdatePendingCategories(UpdatePendingCategories event, Emitter<RecipeListState> emit) {
+    emit(state.copyWith(pendingSelectedCategories: event.categories));
+  }
+
+  void _onUpdatePendingAreas(UpdatePendingAreas event, Emitter<RecipeListState> emit) {
+    emit(state.copyWith(pendingSelectedAreas: event.areas));
+  }
+
+  void _onApplyPendingFilters(ApplyPendingFilters event, Emitter<RecipeListState> emit) {
     final filtered = _applyFilters(
       recipes: state.recipes,
-      category: state.selectedCategory,
-      area: event.area,
+      categories: state.pendingSelectedCategories,
+      areas: state.pendingSelectedAreas,
     );
     emit(state.copyWith(
-      selectedArea: event.area,
+      selectedCategories: state.pendingSelectedCategories,
+      selectedAreas: state.pendingSelectedAreas,
       filteredRecipes: filtered,
     ));
   }
@@ -101,20 +106,22 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
 
   void _onClearFilters(ClearFilters event, Emitter<RecipeListState> emit) {
     emit(state.copyWith(
-      selectedCategory: null,
-      selectedArea: null,
+      selectedCategories: [],
+      selectedAreas: [],
+      pendingSelectedCategories: [],
+      pendingSelectedAreas: [],
       filteredRecipes: state.recipes,
     ));
   }
 
   List<Recipe> _applyFilters({
     required List<Recipe> recipes,
-    String? category,
-    String? area,
+    List<String> categories = const [],
+    List<String> areas = const [],
   }) {
     return recipes.where((recipe) {
-      final matchesCategory = category == null || recipe.category == category;
-      final matchesArea = area == null || recipe.area == area;
+      final matchesCategory = categories.isEmpty || categories.contains(recipe.category);
+      final matchesArea = areas.isEmpty || areas.contains(recipe.area);
       return matchesCategory && matchesArea;
     }).toList();
   }
