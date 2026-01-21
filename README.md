@@ -11,7 +11,7 @@ responsive UI.
 
 You can directly download and install the app using the APK file:
 
-👉 **[Download APK](apk/your-apk-file.apk)**
+👉 **[Download APK](apk/app-release.apk)**
 
 ---
 
