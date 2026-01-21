@@ -24,23 +24,29 @@ class AppRouter {
             name: 'recipe_detail',
             pageBuilder: (context, state) {
               final recipeId = state.pathParameters['id']!;
-              return MaterialPage(
+              return CustomTransitionPage(
                 key: state.pageKey,
                 child: BlocProvider(
-                  create: (context) => RecipeDetailBloc(
-                    di.sl<GetRecipeDetails>(),
-                    di.sl<RecipeRepository>(),
-                  )..add(LoadRecipeDetails(recipeId)),
+                  create: (context) =>
+                      RecipeDetailBloc(di.sl<GetRecipeDetails>(), di.sl<RecipeRepository>())
+                        ..add(LoadRecipeDetails(recipeId)),
                   child: RecipeDetailPage(recipeId: recipeId),
                 ),
+                transitionDuration: const Duration(milliseconds: 300),
+                reverseTransitionDuration: const Duration(milliseconds: 200),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return ScaleTransition(
+                    scale: Tween<double>(
+                      begin: 0.8,
+                      end: 1.0,
+                    ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInExpo)),
+                    child: FadeTransition(opacity: animation, child: child),
+                  );
+                },
               );
             },
           ),
-          GoRoute(
-            path: 'favorites',
-            name: 'favorites',
-            builder: (context, state) => const FavoritesPage(),
-          ),
+          GoRoute(path: 'favorites', name: 'favorites', builder: (context, state) => const FavoritesPage()),
         ],
       ),
     ],
