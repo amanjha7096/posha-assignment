@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe/features/recipes/presentation/widgets/view_mode_toggle_button.dart';
 import '../../../../core/constants/colors.dart';
-import '../../../../core/utils/debouncer.dart';
 import '../bloc/recipe_list/recipe_list_bloc.dart';
-import '../widgets/filter_bottom_sheet.dart';
+import '../widgets/filter_button_widget.dart';
 import '../widgets/recipe_list_view.dart';
+import '../widgets/search_bar_widget.dart';
 import '../widgets/shimmer_loading.dart';
 
 class RecipeListPage extends StatefulWidget {
@@ -18,7 +18,6 @@ class RecipeListPage extends StatefulWidget {
 
 class _RecipeListPageState extends State<RecipeListPage> {
   final _searchController = TextEditingController();
-  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
@@ -67,81 +66,14 @@ class _RecipeListPageState extends State<RecipeListPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: SearchBarWidget(
                       controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search recipe',
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.white,
-                      ),
-                      onChanged: (value) {
-                        _debouncer.run(() {
-                          context
-                              .read<RecipeListBloc>()
-                              .add(SearchRecipes(value));
-                        });
-                      },
+                      onSearch: (value) =>
+                          context.read<RecipeListBloc>().add(SearchRecipes(value)),
                     ),
                   ),
                   const SizedBox(width: 16),
-                  BlocBuilder<RecipeListBloc, RecipeListState>(
-                    builder: (context, state) {
-                      return Stack(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              context
-                                  .read<RecipeListBloc>()
-                                  .add(SetPendingToSelected());
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(28)),
-                                ),
-                                builder: (_) => BlocProvider.value(
-                                  value: BlocProvider.of<RecipeListBloc>(
-                                      context),
-                                  child: const FilterBottomSheet(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.filter_list),
-                            style: IconButton.styleFrom(
-                              backgroundColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                            ),
-                          ),
-                          if (state.activeFiltersCount > 0)
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                    color: AppColors.primaryGreen,
-                                    shape: BoxShape.circle),
-                                child: Text(
-                                  '${state.activeFiltersCount}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                  const FilterButtonWidget(),
                 ],
               ),
             ),
