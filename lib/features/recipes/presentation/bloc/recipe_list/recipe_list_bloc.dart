@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/enums/view_mode.dart';
 import '../../../domain/entities/recipe.dart';
 import '../../../domain/entities/category.dart';
 import '../../../domain/usecases/get_recipes.dart';
@@ -6,6 +7,7 @@ import '../../../domain/usecases/get_categories.dart';
 import '../../../domain/usecases/get_areas.dart';
 
 part 'recipe_list_event.dart';
+
 part 'recipe_list_state.dart';
 
 class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
@@ -32,16 +34,9 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
 
     try {
       final recipes = await getRecipes();
-      emit(state.copyWith(
-        recipes: recipes,
-        filteredRecipes: recipes,
-        isLoading: false,
-      ));
+      emit(state.copyWith(recipes: recipes, filteredRecipes: recipes, isLoading: false));
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      ));
+      emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }
 
@@ -55,23 +50,16 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
 
     try {
       final recipes = await getRecipes(query: event.query);
-      emit(state.copyWith(
-        filteredRecipes: recipes,
-        isLoading: false,
-      ));
+      emit(state.copyWith(filteredRecipes: recipes, isLoading: false));
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      ));
+      emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }
 
   void _onSetPendingToSelected(SetPendingToSelected event, Emitter<RecipeListState> emit) {
-    emit(state.copyWith(
-      pendingSelectedCategories: state.selectedCategories,
-      pendingSelectedAreas: state.selectedAreas,
-    ));
+    emit(
+      state.copyWith(pendingSelectedCategories: state.selectedCategories, pendingSelectedAreas: state.selectedAreas),
+    );
   }
 
   void _onUpdatePendingCategories(UpdatePendingCategories event, Emitter<RecipeListState> emit) {
@@ -88,11 +76,13 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
       categories: state.pendingSelectedCategories,
       areas: state.pendingSelectedAreas,
     );
-    emit(state.copyWith(
-      selectedCategories: state.pendingSelectedCategories,
-      selectedAreas: state.pendingSelectedAreas,
-      filteredRecipes: filtered,
-    ));
+    emit(
+      state.copyWith(
+        selectedCategories: state.pendingSelectedCategories,
+        selectedAreas: state.pendingSelectedAreas,
+        filteredRecipes: filtered,
+      ),
+    );
   }
 
   void _onToggleViewMode(ToggleViewMode event, Emitter<RecipeListState> emit) {
@@ -105,13 +95,15 @@ class RecipeListBloc extends Bloc<RecipeListEvent, RecipeListState> {
   }
 
   void _onClearFilters(ClearFilters event, Emitter<RecipeListState> emit) {
-    emit(state.copyWith(
-      selectedCategories: [],
-      selectedAreas: [],
-      pendingSelectedCategories: [],
-      pendingSelectedAreas: [],
-      filteredRecipes: state.recipes,
-    ));
+    emit(
+      state.copyWith(
+        selectedCategories: [],
+        selectedAreas: [],
+        pendingSelectedCategories: [],
+        pendingSelectedAreas: [],
+        filteredRecipes: state.recipes,
+      ),
+    );
   }
 
   List<Recipe> _applyFilters({

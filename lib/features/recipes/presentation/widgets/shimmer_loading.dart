@@ -4,6 +4,7 @@ import 'package:recipe/features/recipes/presentation/widgets/recipe_card.dart';
 import 'package:recipe/features/recipes/presentation/widgets/recipe_list_tile.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/enums/view_mode.dart';
 import '../../domain/entities/recipe.dart';
 
 class ShimmerLoading extends StatelessWidget {

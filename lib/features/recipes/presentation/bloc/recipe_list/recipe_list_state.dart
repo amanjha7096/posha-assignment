@@ -1,7 +1,5 @@
 part of 'recipe_list_bloc.dart';
 
-enum ViewMode { grid, list }
-
 class RecipeListState {
   final List<Recipe> recipes;
   final List<Recipe> filteredRecipes;

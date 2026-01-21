@@ -9,3 +9,5 @@ class ToggleFavorite extends FavoritesEvent {
 
   ToggleFavorite(this.recipeId);
 }
+
+class ToggleViewMode extends FavoritesEvent {}

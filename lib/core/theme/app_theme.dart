@@ -9,7 +9,7 @@ class AppTheme {
       primary: AppColors.primaryGreen,
     ),
     useMaterial3: true,
-    appBarTheme: const AppBarTheme(centerTitle: true),
+    appBarTheme: const AppBarTheme(centerTitle: true, actionsPadding: .only(right: 10)),
     cardTheme: CardThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -22,6 +22,12 @@ class AppTheme {
       secondaryLabelStyle: TextStyle(color: AppColors.white),
       checkmarkColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    tabBarTheme: TabBarThemeData(
+      labelColor: AppColors.primaryGreen,
+      indicatorColor: AppColors.primaryGreen,
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+      indicator: const UnderlineTabIndicator(borderSide: BorderSide(color: AppColors.primaryGreen, width: 3)),
     ),
   );
 
@@ -32,7 +38,7 @@ class AppTheme {
       primary: AppColors.primaryGreen,
     ),
     useMaterial3: true,
-    appBarTheme: const AppBarTheme(centerTitle: true),
+    appBarTheme: const AppBarTheme(centerTitle: true, actionsPadding: .only(right: 10)),
     cardTheme: CardThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -45,6 +51,12 @@ class AppTheme {
       secondaryLabelStyle: TextStyle(color: AppColors.white),
       checkmarkColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    tabBarTheme: TabBarThemeData(
+      labelColor: AppColors.primaryGreen,
+      indicator: const UnderlineTabIndicator(borderSide: BorderSide(color: AppColors.primaryGreen, width: 3)),
+      indicatorColor: AppColors.primaryGreen,
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
     ),
   );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/enums/view_mode.dart';
 import '../../../domain/usecases/get_favorites.dart';
 import '../../../domain/usecases/toggle_favorite_status.dart';
 
@@ -12,6 +13,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   FavoritesBloc(this.getFavorites, this.toggleFavoriteStatus) : super(const FavoritesState()) {
     on<LoadFavorites>(_onLoadFavorites);
     on<ToggleFavorite>(_onToggleFavorite);
+    on<ToggleViewMode>(_onToggleViewMode);
     //calling load favorites to store list in state on init
     add(LoadFavorites());
   }
@@ -48,5 +50,10 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     } catch (e) {
       // Handle error if needed
     }
+  }
+
+  void _onToggleViewMode(ToggleViewMode event, Emitter<FavoritesState> emit) {
+    final newViewMode = state.viewMode == ViewMode.grid ? ViewMode.list : ViewMode.grid;
+    emit(state.copyWith(viewMode: newViewMode));
   }
 }

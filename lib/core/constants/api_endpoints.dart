@@ -1,5 +1,6 @@
 class ApiEndpoints {
   static const String baseUrl = 'https://www.themealdb.com/api/json/v1/1';
+  static const String ingredientImageBaseUrl = 'https://www.themealdb.com/images/ingredients/';
 
   // Recipes
   static const String searchMeals = '$baseUrl/search.php';

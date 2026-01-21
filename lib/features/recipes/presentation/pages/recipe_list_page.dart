@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/enums/view_mode.dart';
 import '../../../../core/utils/debouncer.dart';
 import '../bloc/recipe_list/recipe_list_bloc.dart';
 import '../widgets/filter_bottom_sheet.dart';
-import '../widgets/recipe_grid_view.dart';
+import '../widgets/recipe_list_view.dart';
 import '../widgets/recipe_list_view.dart';
 import '../widgets/shimmer_loading.dart';
 
@@ -42,8 +43,6 @@ class _RecipeListPageState extends State<RecipeListPage> {
         backgroundColor: AppColors.transparent,
         elevation: 0,
         title: const Text("Recipes", style: TextStyle(fontWeight: FontWeight.w600)),
-        centerTitle: true,
-        actionsPadding: EdgeInsets.only(right: 10),
         actions: [
           IconButton(icon: const Icon(Icons.favorite), onPressed: () => context.go('/favorites')),
           BlocBuilder<RecipeListBloc, RecipeListState>(
@@ -148,9 +147,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                 builder: (context, state) {
                   if (state.isLoading && state.recipes.isEmpty) {
                     return ShimmerLoading(viewMode: state.viewMode);
-                  }
-
-                  if (state.error != null) {
+                  } else if (state.error != null) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -166,17 +163,11 @@ class _RecipeListPageState extends State<RecipeListPage> {
                         ],
                       ),
                     );
-                  }
-
-                  if (state.displayRecipes.isEmpty) {
+                  } else if (state.displayRecipes.isEmpty) {
                     return const Center(child: Text('No recipes found'));
                   }
 
-                  if (state.viewMode == ViewMode.grid) {
-                    return RecipeGridView(recipes: state.displayRecipes);
-                  } else {
-                    return RecipeListView(recipes: state.displayRecipes);
-                  }
+                  return RecipeList(recipes: state.displayRecipes, viewMode: state.viewMode);
                 },
               ),
             ),
