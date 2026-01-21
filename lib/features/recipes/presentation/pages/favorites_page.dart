@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:recipe/features/recipes/presentation/widgets/view_mode_toggle_button.dart';
 import '../../../../core/constants/colors.dart';
-import '../../../../core/enums/view_mode.dart';
 import '../bloc/favorites/favorites_bloc.dart';
 import '../bloc/recipe_list/recipe_list_bloc.dart' hide ToggleViewMode;
 import '../widgets/recipe_list_view.dart';
@@ -22,7 +21,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<FavoritesBloc>().add(LoadFavorites());
-        // Ensure recipes are loaded
         context.read<RecipeListBloc>().add(LoadRecipes());
       }
     });
@@ -40,15 +38,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
         actions: [
           BlocBuilder<FavoritesBloc, FavoritesState>(
             builder: (context, state) {
-              return IconButton(
-                onPressed: () {
-                  context.read<FavoritesBloc>().add(ToggleViewMode());
-                },
-                icon: Icon(state.viewMode == ViewMode.grid ? Icons.view_list : Icons.grid_view),
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+              return ViewModeToggleButton(
+                viewMode: state.viewMode,
+                onPressed: () => context.read<FavoritesBloc>().add(ToggleViewMode()),
               );
             },
           ),
@@ -57,7 +49,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       body: Container(
         decoration: BoxDecoration(
           color: AppColors.lightGray,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: BlocBuilder<RecipeListBloc, RecipeListState>(
           builder: (context, recipeListState) {
@@ -99,7 +91,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   );
                 }
 
-                // Filter recipes that are favorites
                 final favoriteRecipes = recipeListState.recipes
                     .where((recipe) => favoritesState.favoriteIds.contains(recipe.id))
                     .toList();

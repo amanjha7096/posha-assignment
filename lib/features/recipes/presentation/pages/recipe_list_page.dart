@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe/features/recipes/presentation/widgets/view_mode_toggle_button.dart';
 import '../../../../core/constants/colors.dart';
-import '../../../../core/enums/view_mode.dart';
 import '../../../../core/utils/debouncer.dart';
 import '../bloc/recipe_list/recipe_list_bloc.dart';
 import '../widgets/filter_bottom_sheet.dart';
-import '../widgets/recipe_list_view.dart';
 import '../widgets/recipe_list_view.dart';
 import '../widgets/shimmer_loading.dart';
 
@@ -47,15 +46,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
           IconButton(icon: const Icon(Icons.favorite), onPressed: () => context.go('/favorites')),
           BlocBuilder<RecipeListBloc, RecipeListState>(
             builder: (context, state) {
-              return IconButton(
-                onPressed: () {
-                  context.read<RecipeListBloc>().add(ToggleViewMode());
-                },
-                icon: Icon(state.viewMode == ViewMode.grid ? Icons.view_list : Icons.grid_view),
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+              return ViewModeToggleButton(
+                viewMode: state.viewMode,
+                onPressed: () =>
+                    context.read<RecipeListBloc>().add(ToggleViewMode()),
               );
             },
           ),
@@ -64,7 +58,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
       body: Container(
         decoration: BoxDecoration(
           color: AppColors.lightGray,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: Column(
           children: [
@@ -87,7 +81,9 @@ class _RecipeListPageState extends State<RecipeListPage> {
                       ),
                       onChanged: (value) {
                         _debouncer.run(() {
-                          context.read<RecipeListBloc>().add(SearchRecipes(value));
+                          context
+                              .read<RecipeListBloc>()
+                              .add(SearchRecipes(value));
                         });
                       },
                     ),
@@ -99,15 +95,19 @@ class _RecipeListPageState extends State<RecipeListPage> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              context.read<RecipeListBloc>().add(SetPendingToSelected());
+                              context
+                                  .read<RecipeListBloc>()
+                                  .add(SetPendingToSelected());
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(28)),
                                 ),
                                 builder: (_) => BlocProvider.value(
-                                  value: BlocProvider.of<RecipeListBloc>(context),
+                                  value: BlocProvider.of<RecipeListBloc>(
+                                      context),
                                   child: const FilterBottomSheet(),
                                 ),
                               );
@@ -115,7 +115,8 @@ class _RecipeListPageState extends State<RecipeListPage> {
                             icon: const Icon(Icons.filter_list),
                             style: IconButton.styleFrom(
                               backgroundColor: AppColors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
                           if (state.activeFiltersCount > 0)
@@ -124,7 +125,9 @@ class _RecipeListPageState extends State<RecipeListPage> {
                               top: 0,
                               child: Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: AppColors.primaryGreen, shape: BoxShape.circle),
+                                decoration: const BoxDecoration(
+                                    color: AppColors.primaryGreen,
+                                    shape: BoxShape.circle),
                                 child: Text(
                                   '${state.activeFiltersCount}',
                                   style: const TextStyle(
@@ -167,7 +170,8 @@ class _RecipeListPageState extends State<RecipeListPage> {
                     return const Center(child: Text('No recipes found'));
                   }
 
-                  return RecipeList(recipes: state.displayRecipes, viewMode: state.viewMode);
+                  return RecipeList(
+                      recipes: state.displayRecipes, viewMode: state.viewMode);
                 },
               ),
             ),

@@ -9,7 +9,11 @@ class AppTheme {
       primary: AppColors.primaryGreen,
     ),
     useMaterial3: true,
-    appBarTheme: const AppBarTheme(centerTitle: true, actionsPadding: .only(right: 10)),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      actionsPadding: .only(right: 10),
+      titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+    ),
     cardTheme: CardThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -38,7 +42,11 @@ class AppTheme {
       primary: AppColors.primaryGreen,
     ),
     useMaterial3: true,
-    appBarTheme: const AppBarTheme(centerTitle: true, actionsPadding: .only(right: 10)),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      actionsPadding: .only(right: 10),
+      titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+    ),
     cardTheme: CardThemeData(elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
