@@ -22,12 +22,17 @@ class AppRouter {
           GoRoute(
             path: 'recipe/:id',
             name: 'recipe_detail',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final recipeId = state.pathParameters['id']!;
-              return BlocProvider(
-                create: (context) => RecipeDetailBloc(di.sl<GetRecipeDetails>(), di.sl<RecipeRepository>())
-                  ..add(LoadRecipeDetails(recipeId)),
-                child: RecipeDetailPage(recipeId: recipeId),
+              return MaterialPage(
+                key: state.pageKey,
+                child: BlocProvider(
+                  create: (context) => RecipeDetailBloc(
+                    di.sl<GetRecipeDetails>(),
+                    di.sl<RecipeRepository>(),
+                  )..add(LoadRecipeDetails(recipeId)),
+                  child: RecipeDetailPage(recipeId: recipeId),
+                ),
               );
             },
           ),
