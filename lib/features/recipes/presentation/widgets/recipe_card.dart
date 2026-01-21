@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../domain/entities/recipe.dart';
 import '../bloc/favorites/favorites_bloc.dart';
+import 'favorite_button.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -85,26 +86,9 @@ class RecipeCard extends StatelessWidget {
                       ),
 
                       // Save/Bookmark Button
-                      BlocBuilder<FavoritesBloc, FavoritesState>(
-                        builder: (context, state) {
-                          final isFavorite = state.favoriteIds.contains(recipe.id);
-                          return GestureDetector(
-                            onTap: () => context.read<FavoritesBloc>().add(ToggleFavorite(recipe.id)),
-                            child: Container(
-                              padding: const .all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                shape: .circle,
-                                boxShadow: [BoxShadow(color: AppColors.black05, blurRadius: 4, spreadRadius: 1)],
-                              ),
-                              child: Icon(
-                                isFavorite ? Icons.favorite : Icons.favorite_border,
-                                size: 20,
-                                color: isFavorite ? AppColors.red : AppColors.gray500,
-                              ),
-                            ),
-                          );
-                        },
+                      FavoriteButton(
+                        recipeId: recipe.id,
+                        size: 20,
                       ),
                     ],
                   ),

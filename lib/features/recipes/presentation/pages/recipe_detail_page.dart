@@ -9,6 +9,7 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/enums/view_mode.dart';
 import '../../domain/entities/recipe.dart';
 import '../bloc/recipe_detail/recipe_detail_bloc.dart';
+import '../widgets/favorite_button.dart';
 import '../widgets/image_viewer_dialog.dart';
 import '../widgets/ingredient_list_tile.dart';
 import '../widgets/instruction_list_tile.dart';
@@ -65,14 +66,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                           onPressed: () => context.pop(),
                         ),
                         actions: [
-                          IconButton(
-                            onPressed: () {
-                              context.read<RecipeDetailBloc>().add(ToggleFavorite(recipe.id));
-                            },
-                            icon: Icon(
-                              state.isFavorite ? Icons.favorite : Icons.favorite_border,
-                              color: state.isFavorite ? AppColors.red : Colors.white,
-                            ),
+                          FavoriteButton(
+                            recipeId: recipe.id,
+                            size: 24,
+                            // color: Colors.white,
                           ),
                         ],
                         flexibleSpace: FlexibleSpaceBar(
@@ -81,23 +78,32 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                             recipe.name,
                             style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          background: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Hero(
-                                tag: 'recipe-image-${recipe.id}',
-                                child: CachedNetworkImage(imageUrl: recipe.imageUrl ?? '', fit: BoxFit.cover),
-                              ),
-                              const DecoratedBox(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [Colors.black54, Colors.transparent, Colors.black54],
+                          background: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    ImageViewerDialog(imageUrl: recipe.imageUrl ?? '', title: recipe.name),
+                              );
+                            },
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Hero(
+                                  tag: 'recipe-image-${recipe.id}',
+                                  child: CachedNetworkImage(imageUrl: recipe.imageUrl ?? '', fit: BoxFit.cover),
+                                ),
+                                const DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [Colors.black54, Colors.transparent, Colors.black54],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
