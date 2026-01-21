@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/debouncer.dart';
+import '../../../../core/utils/localization_extension.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -27,10 +28,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return TextField(
       controller: widget.controller,
       decoration: InputDecoration(
-        hintText: 'Search recipe',
+        hintText: l10n.searchRecipe,
         prefixIcon: const Icon(Icons.search),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

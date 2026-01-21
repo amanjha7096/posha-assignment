@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe/core/utils/localization_extension.dart';
 import 'package:recipe/features/recipes/presentation/widgets/view_mode_toggle_button.dart';
 import '../../../../core/constants/colors.dart';
 import '../bloc/recipe_list/recipe_list_bloc.dart';
@@ -35,12 +36,13 @@ class _RecipeListPageState extends State<RecipeListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.primaryGreen,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         elevation: 0,
-        title: const Text("Recipes", style: TextStyle(fontWeight: FontWeight.w600)),
+        title: Text(l10n.recipesTitle, style: const TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           IconButton(icon: const Icon(Icons.favorite), onPressed: () => context.go('/favorites')),
           BlocBuilder<RecipeListBloc, RecipeListState>(
@@ -93,13 +95,13 @@ class _RecipeListPageState extends State<RecipeListPage> {
                             onPressed: () {
                               context.read<RecipeListBloc>().add(LoadRecipes());
                             },
-                            child: const Text('Retry'),
+                            child: Text(l10n.retry),
                           ),
                         ],
                       ),
                     );
                   } else if (state.displayRecipes.isEmpty) {
-                    return const Center(child: Text('No recipes found'));
+                    return Center(child: Text(l10n.noRecipesFound));
                   }
 
                   return RecipeList(

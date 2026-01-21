@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:recipe/core/constants/colors.dart';
 import 'package:recipe/features/recipes/presentation/widgets/search_bar_widget.dart';
+import 'package:recipe/l10n/app_localizations.dart';
 
 void main() {
   late TextEditingController controller;
@@ -21,6 +23,13 @@ void main() {
     required Function(String) onSearch,
   }) {
     return MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: SearchBarWidget(
           controller: controller,
@@ -42,7 +51,7 @@ void main() {
 
       final textFieldWidget = tester.widget<TextField>(textField);
       expect(textFieldWidget.controller, controller);
-      expect(textFieldWidget.decoration?.hintText, 'Search recipe');
+      expect(textFieldWidget.decoration?.hintText, 'Search recipe'); // This should now be localized
       expect(textFieldWidget.decoration?.prefixIcon, isA<Icon>());
       expect((textFieldWidget.decoration?.prefixIcon as Icon).icon, Icons.search);
       expect(textFieldWidget.decoration?.filled, true);

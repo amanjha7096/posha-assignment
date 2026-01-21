@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe/core/utils/localization_extension.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -33,6 +34,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.primaryGreen,
       body: BlocBuilder<RecipeDetailBloc, RecipeDetailState>(
@@ -46,7 +48,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
           }
 
           final recipe = state.recipe;
-          if (recipe == null) return const Center(child: Text("Recipe not found"));
+          if (recipe == null) return Center(child: Text(l10n.recipeNotFound));
 
           return Skeletonizer(
             enabled: state.isLoading,
@@ -118,10 +120,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                             indicator: const UnderlineTabIndicator(
                               borderSide: BorderSide(color: AppColors.primaryGreen, width: 3),
                             ),
-                            tabs: const [
-                              Tab(text: "Overview"),
-                              Tab(text: "Ingredients"),
-                              Tab(text: "Instructions"),
+                            tabs: [
+                              Tab(text: l10n.overview),
+                              Tab(text: l10n.ingredients),
+                              Tab(text: l10n.instructions),
                             ],
                           ),
                         ),

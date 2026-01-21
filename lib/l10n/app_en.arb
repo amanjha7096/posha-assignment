@@ -1,0 +1,70 @@
+{
+  "appTitle": "Recipe Finder",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "recipesTitle": "Recipes",
+  "@recipesTitle": {
+    "description": "Title for the recipes list page"
+  },
+  "favoriteRecipesTitle": "Favorite Recipes",
+  "@favoriteRecipesTitle": {
+    "description": "Title for the favorite recipes page"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button text for retry action"
+  },
+  "noRecipesFound": "No recipes found",
+  "@noRecipesFound": {
+    "description": "Message when no recipes are found"
+  },
+  "noFavoriteRecipesYet": "No favorite recipes yet",
+  "@noFavoriteRecipesYet": {
+    "description": "Message when no favorite recipes exist"
+  },
+  "addRecipesToFavoritesHint": "Add recipes to favorites from the recipe details",
+  "@addRecipesToFavoritesHint": {
+    "description": "Hint text for adding favorites"
+  },
+  "filterRecipes": "Filter Recipes",
+  "@filterRecipes": {
+    "description": "Title for the filter bottom sheet"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Button text for clearing filters"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Label for category filter"
+  },
+  "area": "Area",
+  "@area": {
+    "description": "Label for area filter"
+  },
+  "applyFilters": "Apply Filters",
+  "@applyFilters": {
+    "description": "Button text for applying filters"
+  },
+  "recipeNotFound": "Recipe not found",
+  "@recipeNotFound": {
+    "description": "Message when recipe is not found"
+  },
+  "overview": "Overview",
+  "@overview": {
+    "description": "Tab label for recipe overview"
+  },
+  "ingredients": "Ingredients",
+  "@ingredients": {
+    "description": "Tab label for ingredients"
+  },
+  "instructions": "Instructions",
+  "@instructions": {
+    "description": "Tab label for instructions"
+  },
+  "searchRecipe": "Search recipe",
+  "@searchRecipe": {
+    "description": "Hint text for search field"
+  }
+}

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
@@ -17,6 +18,7 @@ import 'package:recipe/features/recipes/presentation/widgets/recipe_list_view.da
 import 'package:recipe/features/recipes/presentation/widgets/search_bar_widget.dart';
 import 'package:recipe/features/recipes/presentation/widgets/shimmer_loading.dart';
 import 'package:recipe/features/recipes/presentation/widgets/view_mode_toggle_button.dart';
+import 'package:recipe/l10n/app_localizations.dart';
 
 @GenerateMocks([RecipeListBloc, FavoritesBloc])
 import 'recipe_list_page_test.mocks.dart';
@@ -54,7 +56,16 @@ void main() {
         BlocProvider<RecipeListBloc>.value(value: recipeListBloc),
         BlocProvider<FavoritesBloc>.value(value: mockFavoritesBloc),
       ],
-      child: MaterialApp.router(routerConfig: goRouter),
+      child: MaterialApp.router(
+        routerConfig: goRouter,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
     );
   }
 
@@ -63,7 +74,7 @@ void main() {
       await tester.pumpWidget(buildTestWidget(recipeListBloc: mockRecipeListBloc));
       await tester.pumpAndSettle();
 
-      expect(find.text('Recipes'), findsOneWidget);
+      expect(find.text('Recipes'), findsOneWidget); 
       expect(find.byIcon(Icons.favorite), findsOneWidget);
       expect(find.byType(IconButton), findsAtLeast(2));
     });

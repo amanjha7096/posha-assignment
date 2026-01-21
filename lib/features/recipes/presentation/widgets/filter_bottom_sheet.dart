@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/utils/localization_extension.dart';
 import '../bloc/recipe_list/recipe_list_bloc.dart';
 
 class FilterBottomSheet extends StatelessWidget {
@@ -8,6 +9,7 @@ class FilterBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<RecipeListBloc, RecipeListState>(
       builder: (context, state) {
         return Container(
@@ -26,19 +28,19 @@ class FilterBottomSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Filter Recipes',
+                      l10n.filterRecipes,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                     ),
                     TextButton(
                       onPressed: () {
                         context.read<RecipeListBloc>().add(ClearFilters());
                       },
-                      child: Text('Clear', style: TextStyle(color: AppColors.gray600)),
+                      child: Text(l10n.clear, style: TextStyle(color: AppColors.gray600)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text('Category', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.category, style: Theme.of(context).textTheme.titleMedium),
                 Wrap(
                   spacing: 8.0,
                   children: state.categories.map((category) {
@@ -55,7 +57,7 @@ class FilterBottomSheet extends StatelessWidget {
                   }).toList(),
                 ),
                 const SizedBox(height: 16),
-                Text('Area', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.area, style: Theme.of(context).textTheme.titleMedium),
                 Wrap(
                   spacing: 8.0,
                   children: state.areas.map((area) {
@@ -84,7 +86,7 @@ class FilterBottomSheet extends StatelessWidget {
                       backgroundColor: AppColors.primaryGreen,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text('Apply Filters', style: TextStyle(color: AppColors.white)),
+                    child: Text(l10n.applyFilters, style: TextStyle(color: AppColors.white)),
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:recipe/features/recipes/presentation/bloc/recipe_list/recipe_lis
 import 'package:recipe/features/recipes/presentation/pages/favorites_page.dart';
 import 'package:recipe/features/recipes/presentation/widgets/recipe_list_view.dart';
 import 'package:recipe/features/recipes/presentation/widgets/shimmer_loading.dart';
+import 'package:recipe/l10n/app_localizations.dart';
 
 @GenerateMocks([FavoritesBloc, RecipeListBloc])
 import 'favorites_page_test.mocks.dart';
@@ -36,7 +38,16 @@ void main() {
         BlocProvider<FavoritesBloc>.value(value: favoritesBloc),
         BlocProvider<RecipeListBloc>.value(value: recipeListBloc),
       ],
-      child: const MaterialApp(home: FavoritesPage()),
+      child: MaterialApp(
+        home: const FavoritesPage(),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
     );
   }
 

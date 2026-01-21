@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe/core/utils/localization_extension.dart';
 import 'package:recipe/features/recipes/presentation/widgets/view_mode_toggle_button.dart';
 import '../../../../core/constants/colors.dart';
 import '../bloc/favorites/favorites_bloc.dart';
@@ -28,12 +29,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.primaryGreen,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         elevation: 0,
-        title: const Text("Favorite Recipes", style: TextStyle(fontWeight: FontWeight.w600)),
+        title: Text(l10n.favoriteRecipesTitle, style: const TextStyle(fontWeight: FontWeight.w600)),
         centerTitle: true,
         actions: [
           BlocBuilder<FavoritesBloc, FavoritesState>(
@@ -68,22 +70,22 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           onPressed: () {
                             context.read<FavoritesBloc>().add(LoadFavorites());
                           },
-                          child: const Text('Retry'),
+                          child: Text(l10n.retry),
                         ),
                       ],
                     ),
                   );
                 } else if (favoritesState.favoriteIds.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.favorite_border, size: 64, color: AppColors.gray500),
                         SizedBox(height: 16),
-                        Text('No favorite recipes yet', style: TextStyle(fontSize: 18, color: AppColors.gray500)),
+                        Text(l10n.noFavoriteRecipesYet, style: TextStyle(fontSize: 18, color: AppColors.gray500)),
                         SizedBox(height: 8),
                         Text(
-                          'Add recipes to favorites from the recipe details',
+                          l10n.addRecipesToFavoritesHint,
                           style: TextStyle(fontSize: 14, color: AppColors.gray500),
                         ),
                       ],
