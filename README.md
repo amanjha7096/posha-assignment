@@ -7,6 +7,14 @@ responsive UI.
 
 ---
 
+## 📥 Download APK
+
+You can directly download and install the app using the APK file:
+
+👉 **[Download APK](apk/your-apk-file.apk)**
+
+---
+
 ## 🚀 Features
 
 - 📋 Browse recipes in Grid / List view
